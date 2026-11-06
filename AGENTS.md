@@ -30,6 +30,7 @@ node --test runtime/tests/*.test.mjs                               # 引擎桥/�
 python3 app/tool/l10n_merge.py --check                             # 文案生成检查
 python3 app/tool/guide_sync.py --check                             # 用户指南同步检查
 tooling/build-apk.sh --build-name <x.y.z>                          # 构建 APK
+(cd app-ios/Packages/DshCore && swift test)                        # iOS 协议层测试
 ```
 
 CI（`.github/workflows/ci.yml`）在 PR 上跑通用检查和改动涉及的部分，在 `main` 上跑全量，结果看 `CI OK`。它不碰真机和真实账号，绿了不等于手机上没问题。

@@ -54,6 +54,15 @@
 
 **真机调界面（热重载）：** `tooling/dev-run.sh` 把 debug 包覆盖安装到手机上已有的 release 版，再挂上 Flutter，按 `r` 几秒内生效。它用 `adb install -r` 加 `flutter attach`，不用 `flutter run`，因为后者安装失败时会先卸载，清掉手机上的数据。debug 模式动画偏卡，只用来看布局、尺寸和颜色，判断流畅度要打 release 包。需要 `app/android/key.properties` 和手机上的包同一把 key。
 
+**iOS 原生客户端（`app-ios/`，远程客户端）：** 需要 macOS + Xcode + xcodegen（brew）；本机依赖走 GitHub 时可用 `swift package config set-mirror` 或 git insteadOf 镜像：
+
+```bash
+(cd app-ios/Packages/DshCore && swift test)   # 协议/SSH 层单测（含 DshProbe 端到端探针源码）
+(cd app-ios && xcodegen generate && xcodebuild -project DshGo.xcodeproj -scheme DshGo -destination 'generic/platform=iOS Simulator' -skipPackagePluginValidation build CODE_SIGNING_ALLOWED=NO)
+```
+
+CI 的 `ios-native` job（macos-15）跑单测与未签名构建；模拟器/真机运行验证不在 CI 里。
+
 **Dart 通信包：**
 
 ```bash

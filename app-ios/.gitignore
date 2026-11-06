@@ -1,0 +1,19 @@
+# XcodeGen output; regenerate with `xcodegen generate` (project.yml is the source).
+*.xcodeproj
+
+# Build artifacts
+DerivedData/
+build/
+.build/
+
+# User state
+xcuserdata/
+*.xcuserstate
+.DS_Store
+
+# Swift Package Manager
+Packages/*/Package.resolved
+.build/
+
+# Local SwiftPM configuration (machine-specific mirrors)
+.swiftpm/

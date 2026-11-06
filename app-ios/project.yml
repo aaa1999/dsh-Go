@@ -1,0 +1,51 @@
+name: DshGo
+options:
+  bundleIdPrefix: io.github.ccch1mneyyy
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+
+packages:
+  DshCore:
+    path: Packages/DshCore
+  MarkdownUI:
+    url: https://github.com/gonzalezreal/swift-markdown-ui
+    from: 2.4.0
+
+targets:
+  DshGo:
+    type: application
+    platform: iOS
+    sources:
+      - Sources/App
+    dependencies:
+      - package: DshCore
+      - package: MarkdownUI
+    info:
+      path: Support/Info.plist
+      properties:
+        CFBundleDisplayName: DSH Go
+        CFBundleShortVersionString: "0.1.0"
+        CFBundleVersion: "1"
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        ITSAppUsesNonExemptEncryption: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.ccch1mneyyy.dshApp
+        TARGETED_DEVICE_FAMILY: "1"
+        SUPPORTS_MACCATALYST: "NO"
+
+schemes:
+  DshGo:
+    build:
+      targets:
+        DshGo: all

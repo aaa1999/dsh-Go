@@ -144,7 +144,7 @@
 
 - targetSdk 升级（为国内商店上架做准备；需要改用 W^X 兼容的执行方式）。
 - 纯血鸿蒙：Flutter OHOS 版本评估。
-- iOS：只做远程客户端（iOS 不允许本地运行 Linux 环境）。
+- iOS：只做远程客户端（iOS 不允许本地运行 Linux 环境）。☑️ 首版：原生 Swift/SwiftUI 客户端（`app-ios/`，XcodeGen 工程 + DshCore 协议包），SSH 隧道模式连 Linux 服务器（Citadel/swift-nio-ssh，TOFU、引导脚本与 Android 版同源），dsh web 协议栈（token→cookie、mux、session/follow 流式、审批/提问）已对真实引擎端到端验证（`swift run DshProbe`）；CI `ios-native` job；会话列表/聊天（markdown 流式）/主机管理/审批与提问 sheet 就绪。待做：SSH 私钥认证、真机验证、签名分发（docs/plan-20261106-ios-native-remote-client.md）。
 
 ## 可借鉴的项目
 

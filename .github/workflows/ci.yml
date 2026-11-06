@@ -35,6 +35,7 @@ jobs:
       app: ${{ github.event_name != 'pull_request' || steps.filter.outputs.app == 'true' }}
       packages: ${{ github.event_name != 'pull_request' || steps.filter.outputs.packages == 'true' }}
       runtime: ${{ github.event_name != 'pull_request' || steps.filter.outputs.runtime == 'true' }}
+      ios: ${{ github.event_name != 'pull_request' || steps.filter.outputs.ios == 'true' }}
     steps:
       - id: filter
         if: github.event_name == 'pull_request'
@@ -46,6 +47,7 @@ jobs:
             app: [*ci, 'app/**', 'packages/**', 'sdk/plugin-kit/**', 'site/share/**', 'docs/guide/**', 'THIRD_PARTY_NOTICES.md']
             packages: [*ci, 'packages/**']
             runtime: [*ci, 'runtime/**', 'examples/**', 'sdk/plugin-kit/**', 'app/tool/engine_auth/**', 'app/test/plugin_config/fixtures/**', 'app/test/media/fixtures/**']
+            ios: [*ci, 'app-ios/**']
 
   checks:
     name: Generated files, tooling, SDK, web
@@ -255,10 +257,34 @@ jobs:
       - working-directory: app/android
         run: gradle --stacktrace :app:testArm64DebugUnitTest
 
+  ios-native:
+    name: iOS native
+    needs: changes
+    if: needs.changes.outputs.ios == 'true'
+    runs-on: macos-15
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: app-ios
+    steps:
+      - *checkout
+      # The protocol layer is a plain SPM package: its tests run on the host.
+      - name: Unit tests (DshCore)
+        run: swift test --package-path Packages/DshCore
+      # The app project is generated from project.yml (the .xcodeproj is not tracked).
+      - run: brew install xcodegen
+      - run: xcodegen generate
+      - name: Build (unsigned, simulator)
+        run: |
+          set -o pipefail
+          xcodebuild -project DshGo.xcodeproj -scheme DshGo \
+            -destination 'generic/platform=iOS Simulator' \
+            -skipPackagePluginValidation -quiet build CODE_SIGNING_ALLOWED=NO
+
   ci-ok:
     name: CI OK
     if: always()
-    needs: [changes, checks, flutter, dart, runtime, android]
+    needs: [changes, checks, flutter, dart, runtime, android, ios-native]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
